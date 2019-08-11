@@ -1,0 +1,194 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+
+namespace RawInv
+{
+    public partial class UserRegistration : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+            //if (Session["New"] != null)
+            //{
+            //    lblWelcome.Text += Session["New"].ToString();
+            //}
+            //else
+            //{
+            //    Response.Redirect("Login.aspx");
+            //}
+
+            //string mainConnection = ConfigurationManager.ConnectionStrings["PeakPrintsDB"].ConnectionString;
+            //SqlConnection sqlconn = new SqlConnection(mainConnection);
+            //string sqlQuery = "SELECT * FROM [PeakPrintsDb].[dbo].[Products]";
+            //SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlconn);
+            //sqlconn.Open();
+            //SqlDataAdapter adapter = new SqlDataAdapter(sqlCommand);
+            //DataTable dataTable = new DataTable();
+            //adapter.Fill(dataTable);
+            //GridView1.DataSourceID = null;
+            //GridView1.DataSource = dataTable;
+            //GridView1.DataBind();
+            //sqlconn.Close();
+        }
+
+        //protected void DisplayData()
+        //{
+        //    SqlConnection sqlconn = new SqlConnection(ConfigurationManager.ConnectionStrings["PeakPrintsDB"].ConnectionString);
+        //    DataTable dt = new DataTable();
+        //    SqlDataAdapter adapt = new SqlDataAdapter("SELECT * FROM [PeakPrintsDb].[dbo].[Products]", sqlconn);
+        //    adapt.Fill(dt);
+        //    sqlconn.Close();
+        //    GridView1.DataSourceID = null;
+        //    GridView1.DataSource = dt;
+        //    GridView1.DataBind();
+        
+        //}
+
+        protected void btnLogOut_Click(object sender, EventArgs e)
+        {
+            Session["New"] = null;
+            Response.Redirect("Login.aspx");
+        }
+
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            string chkSearch = "";
+            for (int i=0; i < CheckBoxList1.Items.Count; i++)
+            {
+                if (CheckBoxList1.Items[i].Selected)
+                {
+                    if (chkSearch == "")
+                    {
+                        chkSearch = "'" + CheckBoxList1.Items[i].Text + "'";
+                    }
+                    else
+                    {
+                        chkSearch += ", " + CheckBoxList1.Items[i].Text;
+                    }
+                    lblSearch.Text = chkSearch;
+                    lblSearch.Visible = false;
+
+                    string mainConnection = ConfigurationManager.ConnectionStrings["PeakPrintsDB"].ConnectionString;
+                    SqlConnection sqlconn = new SqlConnection(mainConnection);
+                    string sqlQuery = "SELECT * FROM [PeakPrintsDb].[dbo].[Products] WHERE ProductName IN (" + lblSearch.Text + ")";
+                    SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlconn);
+                    sqlconn.Open();
+                    SqlDataAdapter adapter = new SqlDataAdapter(sqlCommand);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+                    GridView1.DataSourceID = null;
+                    GridView1.DataSource = dataTable;
+                    GridView1.DataBind();
+                    sqlconn.Close();
+                }
+
+            }
+        }
+
+        protected void btnEnter_Click(object sender, EventArgs e)
+        {
+            string chkYes = "";
+            for (int i = 0; i < CheckBoxList2.Items.Count; i++)
+            {
+                if (CheckBoxList2.Items[i].Selected)
+                {
+                    if (chkYes == "")
+                    {
+                        chkYes = "'" + CheckBoxList2.Items[i].Text + "'";
+                    }
+                    chkYes = "YES";
+                    lblYes.Text = chkYes;
+                    lblYes.Visible = false;
+
+                    string mainConnection = ConfigurationManager.ConnectionStrings["PeakPrintsDB"].ConnectionString;
+                    SqlConnection sqlconn = new SqlConnection(mainConnection);
+                    string sqlQuery = "SELECT * FROM [PeakPrintsDb].[dbo].[Products] WHERE ReOrder LIKE '%Yes'";
+                    SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlconn);
+                    sqlconn.Open();
+                    SqlDataAdapter adapter = new SqlDataAdapter(sqlCommand);
+                    DataTable dataTable = new DataTable();
+                    adapter.Fill(dataTable);
+                    GridView1.DataSourceID = null;
+                    GridView1.DataSource = dataTable;
+                    GridView1.DataBind();
+                    sqlconn.Close();
+                }
+
+            }
+        }
+
+ 
+
+        //protected void GridView1_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        //{
+        //    SqlConnection sqlconn = new SqlConnection();
+        //    sqlconn.ConnectionString = ConfigurationManager.ConnectionStrings["PeakPrintsDB"].ConnectionString;
+        //    sqlconn.Open();
+
+        //    string updateQuery = "UPDATE [Products] SET [Units_In_Stock] = @Units_In_Stock, [Product_Used] = @Product_Used, [Products_Left] = @Products_Left, [ReOrder] = @ReOrder WHERE [ProductID] = @ProductID";
+        //    SqlCommand command = new SqlCommand(updateQuery, sqlconn);
+
+        //    command.Parameters.AddWithValue("@Units_In_Stock", txtUnitsStock.Text);
+        //    command.Parameters.AddWithValue("@Product_Used", txtProdUsed.Text);
+        //    command.Parameters.AddWithValue("@Products_Left", txtProdLeft.Text);
+        //    command.Parameters.AddWithValue("@ReOrder", txtReorder.Text);
+
+        //    command.ExecuteNonQuery();
+        //    sqlconn.Close();
+        //}
+
+
+        //protected void btnUpdate_Click(object sender, EventArgs e)
+        //{
+        //    int abc = Convert.ToInt32(txtProdID.Text);
+        //    SqlConnection sqlconn = new SqlConnection();
+        //    sqlconn.ConnectionString = ConfigurationManager.ConnectionStrings["PeakPrintsDB"].ConnectionString;
+        //    sqlconn.Open();
+
+        //    string updateQuery = "UPDATE [PeakPrintsDb].[dbo].[Products] SET [Units_In_Stock] = @Units_In_Stock, [Product_Used] = @Product_Used, [Products_Left] = @Products_Left, [ReOrder] = @ReOrder WHERE [ProductID] = 3";
+        //    SqlCommand command = new SqlCommand(updateQuery, sqlconn);
+
+        //    command.Parameters.AddWithValue("@ProductID", txtProdID.Text);
+        //    command.Parameters.AddWithValue("@Units_In_Stock", txtUnitsStock.Text);
+        //    command.Parameters.AddWithValue("@Product_Used", txtProdUsed.Text);
+        //    command.Parameters.AddWithValue("@Products_Left", txtProdLeft.Text);
+        //    command.Parameters.AddWithValue("@ReOrder", txtReorder.Text);
+        //    GridView1.UpdateRow(abc, true);
+        //    // command.ExecuteReader();
+        //    // SqlDataAdapter adapter = new SqlDataAdapter(command);
+        //    DataTable dataTable = new DataTable();
+        //    SqlDataReader sdr = command.ExecuteReader();
+        //    dataTable.Load(sdr);
+        //    //adapter.Fill(dataTable);
+        //    // GridView1.DataSourceID = null;
+        //    GridView1.DataSource = dataTable;
+        //    GridView1.DataBind();
+            
+        //    sqlconn.Close();
+        //}
+
+        //protected void btnAdd_Click(object sender, EventArgs e)
+        //{
+        //    string mainConnection = ConfigurationManager.ConnectionStrings["PeakPrintsDB"].ConnectionString;
+        //    SqlConnection sqlconn = new SqlConnection(mainConnection);
+        //    string sqlQuery = "INSERT INTO [PeakPrintsDb].[dbo].[Products] " + cmbProd.Text + " VALUES (" + txtQty.Text + ")";
+        //    SqlCommand sqlCommand = new SqlCommand(sqlQuery, sqlconn);
+        //    sqlconn.Open();
+        //    SqlDataAdapter adapter = new SqlDataAdapter(sqlCommand);
+        //    DataTable dataTable = new DataTable();
+        //    adapter.Fill(dataTable);
+        //    GridView1.DataSourceID = null;
+        //    GridView1.DataSource = dataTable;
+        //    GridView1.DataBind();
+        //    sqlconn.Close();
+        //}
+    }
+}
